@@ -5,20 +5,31 @@
  * https://leetcode.com/problems/median-of-two-sorted-arrays/
  *
  * by Zhiyong Pan on Sep 4, 2020
- * 
+ *
 -------- SUBMISSION STATUS ---------------------
 Success
-Details 
-Runtime: 2 ms, faster than 99.93% of Java online submissions for Median of Two Sorted Arrays.
-Memory Usage: 40.7 MB, less than 61.71% of Java online submissions for Median of Two Sorted Arrays.
 
-*/
+Runtime: 2 ms, faster than 99.91% of Java online submissions for Median of Two Sorted Arrays.
+Memory Usage: 40.6 MB, less than 74.41% of Java online submissions for Median of Two Sorted Arrays.
+ *
+ */
 
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
 		int m = nums1.length;
 		int n = nums2.length;
-		
+
+		// swap to make sure nums1 is longer than nums2
+		if (m < n) {
+			int[] ta = nums1;
+			nums1 = nums2;
+			nums2 = ta;
+
+			int ti = m;
+			m = n;
+			n = ti;
+		}
+
 		// |stop| is a position in the combined array,
 		// the median is either [stop-1] or ([stop-1]+[stop])/2, depending on
 		// whether is combined length is odd or even.
@@ -30,7 +41,20 @@ class Solution {
 		// array, so
 		// 	(i + 1) + (j + 1) == stop + 1
 		int i = -1, j = -1;
-		
+
+		// try to jump |i| and |j|
+		int p = n > 0 ? positionFor(nums1, nums2[0]) : -1;
+		int q = n > 0 ? positionFor(nums1, nums2[n - 1]) : -1;
+		if (q != -1 && q + n < stop) { // the whole nums2 is before the median
+			j = n - 1;
+		} else if (p != -1) {
+			if (p > stop) { // the whole nums2 is after the median
+				i = stop;
+			} else { // part of nums2 is before the median
+				i = p - 1;
+			}
+		}
+
 		// Increase |i| and |j| until we reach |stop|.
 		//
 		// Method: repeatedly choose the smaller one from
@@ -50,39 +74,61 @@ class Solution {
 				}
 			}
 		}
-		
+
 		// Determine the median value
-		
+
 		// |a| and |b| are the last 2 items of nums1[0..i],
 		// |c| and |d| are the last 2 items of nums2[0..j].
 		// Warning: 3 out of 4 might be not exist.
 		// Non-existent values are marked by Integer.MIN_VALUE.
 		int a, b, c, d;
 		a = b = c = d = Integer.MIN_VALUE;
-		
+
 		if (i >= 0) {
 			if (i > 0)
 				a = nums1[i - 1];
 			if (i < m)
 				b = nums1[i];
 		}
-		
+
 		if (j >= 0) {
 			if (j > 0)
 				c = nums2[j - 1];
 			if (j < n)
 				d = nums2[j];
 		}
-		
+
 		// |v| is the value after the median in the combined array,
 		// |v0| is the value before or equals to the median.
 		int v = Math.max(b, d);
 		int v0 = Math.max(Math.max(a, c), Math.min(b,  d));
-		
+
 		if ((m + n) % 2 == 1) {
 			return v0;
 		} else {
 			return (v0 + v) / 2.0;
 		}
+    }
+
+    /**
+     * Get a position in a sorted array that if the specified value is inserted
+     * there, the array will remain sorted.
+     * @param a the sorted array.
+     * @param v the value to insert.
+     * @return between 0 and a.length, inclusively.
+     */
+    public static int positionFor(int[] a, int v) {
+    	if (a.length == 0) return 0;
+    	return positionFor_(v, a, 0, a.length);
+    }
+
+    // recursive implementation of binary search for positionFor().
+    private static int positionFor_(int v, int[] a, int lo, int hi) {
+    	if (lo >= hi) return lo;
+    
+    	int m = (lo + hi) / 2;
+    	if (v == a[m]) return m;
+    	else if (v < a[m]) return positionFor_(v, a, lo, m - 1);
+    	else return positionFor_(v, a, m + 1, hi);
     }
 }

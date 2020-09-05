@@ -7,6 +7,19 @@ public class SolutionTest {
 	Solution s = new Solution();
 	
 	@Test
+	public void testPositionFor() {
+		assertEquals(0, Solution.positionFor(new int[] {}, 0));
+		assertEquals(0, Solution.positionFor(new int[] {1}, 0));
+		assertEquals(0, Solution.positionFor(new int[] {1}, 1));
+		assertEquals(1, Solution.positionFor(new int[] {1}, 2));
+		assertEquals(0, Solution.positionFor(new int[] {1, 2}, 0));
+		assertEquals(0, Solution.positionFor(new int[] {1, 2}, 1));
+		assertEquals(1, Solution.positionFor(new int[] {1, 2}, 2));
+		assertEquals(2, Solution.positionFor(new int[] {1, 2}, 3));
+		assertEquals(2, Solution.positionFor(new int[] {1, 2, 4}, 3));
+	}
+
+	@Test
 	public void testFindMedianSortedArrays() {
 		int[] nums1 = {};
 		int[] nums2 = {2};
@@ -100,5 +113,61 @@ public class SolutionTest {
 		int[] nums2 = {2,            40};
 		assertEquals(6, s.findMedianSortedArrays(nums1, nums2), 1e-8);
 		assertEquals(6, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_whole_nums2() {
+		int[] nums1 = {     2, 3, 4, 5, 6, 7, 8, 9, 10};
+		int[] nums2 = {0, 1};
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_whole_nums2_variant() {
+		int[] nums1 = {     2, 3, 4, 5, 6, 7, 8, 9, 10};
+		int[] nums2 = {0, 2};
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_non_nums2() {
+		int[] nums1 = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+		int[] nums2 = {	                          9, 10};
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_non_nums2_variant() {
+		int[] nums1 = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+		int[] nums2 = {	                          8, 10};
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_partial_nums2() {
+		int[] nums1 = {0, 1,    3,    5, 6,    8, 9, 10};
+		int[] nums2 = {	     2,    4,       7,         };
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_partial_nums2_variant() {
+		int[] nums1 = {0, 1,    3,       6,    8, 9, 10};
+		int[] nums2 = {	     2,    4, 5,    7,         };
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
+	}
+
+	@Test
+	public void testFindMedianSortedArrays_shortcut_partial_nums2_variant2() {
+		int[] nums1 = {0, 1,    3,       6, 7, 8, 9, 10};
+		int[] nums2 = {	     2,    4, 5,               };
+		assertEquals(5, s.findMedianSortedArrays(nums1, nums2), 1e-8);
+		assertEquals(5, s.findMedianSortedArrays(nums2, nums1), 1e-8);
 	}
 }
