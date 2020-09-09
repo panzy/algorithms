@@ -7,18 +7,19 @@
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 
 public class SolutionTest {
-	
+
 	static int[] range(int n) {
 		int[] a = new int[n];
 		for (int i = 0; i < n; ++i)
 			a[i] = i;
 		return a;
 	}
-	
+
 	static int[] randomRange(int n) {
 		int[] a = range(n);
 		for (int k = 0; k < n; ++k) {
@@ -28,7 +29,7 @@ public class SolutionTest {
 		}
 		return a;
 	}
-	
+
 	static void swap(int[] a, int i, int j) {
 		int t = a[i];
 		a[i] = a[j];
@@ -95,58 +96,193 @@ public class SolutionTest {
 	}
 
 	@Test
+	public final void testNumberOfConnectedComponents_0_0() {
+		int[][] edges = { };
+		assertEquals(0, Solution2.numberOfConnectedComponents(edges, 0));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_2_1() {
+		int[][] edges = {
+				{ 0, 1 },
+		};
+		assertEquals(1, Solution2.numberOfConnectedComponents(edges, 2));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_3_1() {
+		int[][] edges = {
+				{ 0, 1 },
+				{ 2, 1 },
+		};
+		assertEquals(1, Solution2.numberOfConnectedComponents(edges, 3));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_8_3() {
+		int[][] edges = {
+				{ 0, 1 },
+				{ 1, 2 },
+
+				{ 3, 4 },
+				{ 4, 5 },
+				{ 4, 5 },
+
+				{ 6, 7 },
+				{ 7, 6 }
+		};
+		assertEquals(3, Solution2.numberOfConnectedComponents(edges, 8));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_4_2() {
+		int[][] edges = {
+				{ 0, 1 },
+				{ 2, 3 },
+		};
+		assertEquals(2, Solution2.numberOfConnectedComponents(edges, 4));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_20_1() {
+		// a graph generated from row
+		// [9, 1, 10, 17, 16, 12, 15, 3, 7, 11, 2, 19, 0, 13, 14, 5, 8, 4, 18, 6]
+
+		int[][] edges = {
+				{ 1, 4 },
+				{ 2, 1 },
+				{ 5, 3 },
+				{ 6, 0 },
+				{ 7, 3 },
+				{ 8, 7 },
+				{ 8, 0 },
+				{ 9, 4 },
+				{ 9, 5 },
+		};
+		assertEquals(1, Solution2.numberOfConnectedComponents(edges, 20));
+	}
+
+	@Test
+	public final void testNumberOfConnectedComponents_20_2() {
+		// a graph generated from row
+		// [3,9,10,5,0,4,11,16,6,2,1,17,18,13,7,19,14,8,15,12]
+
+		int[][] edges = {
+				{ 0, 1 },
+				{ 1, 2 },
+				{ 2, 3 },
+				{ 0, 3 },
+				{ 4, 5 },
+				{ 4, 9 },
+				{ 6, 5 },
+				{ 6, 7 },
+				{ 7, 8 },
+				{ 8, 9 },
+		};
+		assertEquals(2, Solution2.numberOfConnectedComponents(edges, 10));
+	}
+
+	@Test
 	public final void testMinSwapCouples_example1() {
 		assertEquals(1, new Solution().minSwapsCouples(new int[] { 0, 2, 1, 3 }));
+		assertEquals(1, new Solution2().minSwapsCouples(new int[] { 0, 2, 1, 3 }));
 	}
 
 	@Test
 	public final void testMinSwapCouples_example2() {
 		assertEquals(0, new Solution().minSwapsCouples(new int[] { 3, 2, 0, 1 }));
+		assertEquals(0, new Solution2().minSwapsCouples(new int[] { 3, 2, 0, 1 }));
 	}
 
 	@Test
 	public final void testMinSwapCouples_532140() {
 		assertEquals(2, new Solution().minSwapsCouples(new int[] { 5, 3, 2, 1, 4, 0 }));
+		assertEquals(2, new Solution2().minSwapsCouples(new int[] { 5, 3, 2, 1, 4, 0 }));
 	}
 
 	@Test
 	public final void testMinSwapCouples_ordered() {
 		int[] row = range(60);
 		assertEquals(0, new Solution().minSwapsCouples(row));
+		assertEquals(0, new Solution2().minSwapsCouples(row));
 	}
 
 	@Test
 	public final void testMinSwapCouples_60_swaped_once() {
 		int[] row = range(60);
-		
+
 		swap(row, 0, 59);
+
+		// test Solution2 first, because Solution will modify |row|.
+		assertEquals(1, new Solution2().minSwapsCouples(row));
 		assertEquals(1, new Solution().minSwapsCouples(row));
 	}
 
 	@Test
 	public final void testMinSwapCouples_60_swaped_twice_but_still_coupled() {
 		int[] row = range(60);
-		
+
 		swap(row, 0, 59);
 		swap(row, 1, 58);
+
+		// test Solution2 first, because Solution will modify |row|.
+		assertEquals(0, new Solution2().minSwapsCouples(row));
 		assertEquals(0, new Solution().minSwapsCouples(row));
 	}
 
 	@Test
 	public final void testMinSwapCouples_60_swaped_twice() {
 		int[] row = range(60);
-		
+
 		swap(row, 0, 59);
 		swap(row, 2, 57);
+
+		// test Solution2 first, because Solution will modify |row|.
+		assertEquals(2, new Solution2().minSwapsCouples(row));
 		assertEquals(2, new Solution().minSwapsCouples(row));
 	}
 
 	@Test
-	public final void testMinSwapCouples_60_random() {
-		int[] row = randomRange(60);
-		new Solution().minSwapsCouples(row);
-		
-		for (int i = 0; i < 60; i += 2) {
+	public final void testMinSwapCouples_2_connected_components() {
+		int[] row = {
+				0, 2, 1, 3,
+				4, 6, 7, 5
+		};
+
+		// test Solution2 first, because Solution will modify |row|.
+		assertEquals(2, new Solution2().minSwapsCouples(row));
+		assertEquals(2, new Solution().minSwapsCouples(row));
+	}
+
+	@Test
+	public final void testMinSwapCouples_from_leetcode() {
+		int[] row = { 3,9,10,5,0,4,11,16,6,2,1,17,18,13,7,19,14,8,15,12 };
+		assertEquals(8, new Solution2().minSwapsCouples(row));
+		assertEquals(8, new Solution().minSwapsCouples(row));
+	}
+
+	@Test
+	public final void testMinSwapCouples_random() {
+		int N = 60;
+
+		int[] row = randomRange(N);
+		int[] rowBak = Arrays.copyOf(row, N);
+
+		// test Solution2 first, because Solution will modify |row|.
+		int resultOfSolution2 = new Solution2().minSwapsCouples(row);
+
+		int resultOfSolution1 = new Solution().minSwapsCouples(row);
+
+		if (resultOfSolution1 != resultOfSolution2) {
+			System.err.println("The two got different answers for this row:");
+			System.err.println(Arrays.toString(rowBak));
+			System.err.printf("Solution 1: %d%n", resultOfSolution1);
+			System.err.printf("Solution 2: %d%n", resultOfSolution2);
+		}
+
+		assertEquals(resultOfSolution1, resultOfSolution2);
+
+		for (int i = 0; i < N; i += 2) {
 			if (!Solution.isCouple(row[i], row[i + 1]))
 				fail(i + " and " + (i + 1) + " are not a couple");
 		}
