@@ -1,8 +1,8 @@
 import java.util.Arrays;
 
 /**
- * Solve the LeetCode problem "765. Couples Holding Hands" in Java, again,
- * using a graph.
+ * Solve the LeetCode problem "765. Couples Holding Hands" in Java, again, using
+ * graph.
  *
  * Problem description:
  * https://leetcode.com/problems/couples-holding-hands/
@@ -95,14 +95,14 @@ class Solution2 {
         int[][] edges = new int[MAX_EDGES][];
 
         int[] seats = Solution.initPeopleArray(row);
-
+   
         int edgeCnt = 0;
-
+   
         // for each two seats along the row, generate edges for it.
         for (int i = 0; i < row.length; i += 2) {
             if (!Solution.isCouple(row[i], row[i + 1])) {
                 int thisNodeIdx = i / 2;
-
+           
                 // for each people in this node, an edge is needed if that
                 // person's id is even.
                 for (int j = i; j < i + 2; ++j) {
@@ -114,19 +114,9 @@ class Solution2 {
                 }
             }
         }
-
+   
         // heavy work is done in numberOfConnectedComponents().
         return edgeCnt - numberOfConnectedComponents(edges, row.length);
-    }
-
-    /**
-     * Not a real color. Just a number to flag a connected component of a graph.
-     *
-     * All nodes that are connected to each other have the same "color".
-     */
-    static class Color {
-        public int color;
-        public Color(int c) { color = c; }
     }
 
     /**
@@ -138,7 +128,11 @@ class Solution2 {
      * @return number of connected components.
      */
     static int numberOfConnectedComponents(int[][] edges, int nodeNum) {
-        Color[] nodeColors = new Color[nodeNum];
+        // Not a real color. Just a number to label a connected component of a graph.
+        // All nodes that are connected to each other have the same "color".
+        // A valid color >= 0.
+        int[] nodeColors = new int[nodeNum];
+        Arrays.fill(nodeColors, -1);
 
         int nextColorValue = 0;
 
@@ -152,38 +146,38 @@ class Solution2 {
                 int startNode = edges[i][0];
                 int endNode = edges[i][1];
 
-                if (nodeColors[startNode] == null) {
-                    if (nodeColors[endNode] == null) {
-                        nodeColors[startNode] = nodeColors[endNode] = new Color(nextColorValue++);
+                if (nodeColors[startNode] < 0) {
+                    if (nodeColors[endNode] < 0) {
+                        nodeColors[startNode] = nodeColors[endNode] = nextColorValue++;
                     } else {
                         nodeColors[startNode] = nodeColors[endNode];
                     }
                 } else {
-                    if (nodeColors[endNode] == null) {
+                    if (nodeColors[endNode] < 0) {
                         nodeColors[endNode] = nodeColors[startNode];
                     } else {
-                        if (nodeColors[startNode].color < nodeColors[endNode].color) {
+                        if (nodeColors[startNode] < nodeColors[endNode]) {
                             nodeColors[endNode] = nodeColors[startNode];
                             colorValueLowered = true;
-                        } else if (nodeColors[startNode].color > nodeColors[endNode].color) {
+                        } else if (nodeColors[startNode] > nodeColors[endNode]) {
                             nodeColors[startNode] = nodeColors[endNode];
                             colorValueLowered = true;
                         }
                     }
                 }
             }
-
+       
             if (!colorValueLowered)
                 break;
         }
-
+   
         // count how many colors are used
         int colorNum = 0;
         boolean[] usedColors = new boolean[nodeNum]; // use it like a set
         Arrays.fill(usedColors, false);
         for (int i = 0; i < nodeNum; ++i) {
-            if (nodeColors[i] != null && !usedColors[nodeColors[i].color]) {
-                usedColors[nodeColors[i].color] = true;
+            if (nodeColors[i] != -1 && !usedColors[nodeColors[i]]) {
+                usedColors[nodeColors[i]] = true;
                 ++colorNum;
             }
         }
