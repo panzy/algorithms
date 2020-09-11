@@ -3,10 +3,11 @@ the problems mainly from LeetCode.
 
 The goal is not just to solve the problems, but also to write clean code.
 
-To keep the code clean, this methodology is used to organize a program: the
-main function reads like pseudo-code, clearly showing the solution's idea, and
-subroutines provide vocabularies for the pseudo-code. Each subroutine is proved
-correct by unit tests.
+To keep the code clean, for newer programs, like
+[leetcode-hard-765-couples-holding-hands](./leetcode-hard-765-couples-holding-hands),
+this methodology is applied: the main function reads like pseudo-code, clearly
+showing the solution's idea, and subroutines provide vocabularies for the
+pseudo-code. Each subroutine is proved correct by unit tests.
 
 Unit tests are heavily used. They are not written after the solution code has
 finished, but are written in parallel with the solution being developed. They
