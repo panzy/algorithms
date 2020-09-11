@@ -5,13 +5,14 @@
  * https://leetcode.com/problems/merge-k-sorted-lists/
  * 
  * by Zhiyong Pan on 09/04/2016
- * 
- * Definition for singly-linked list.
- * function ListNode(val) {
- *     this.val = val;
- *     this.next = null;
- * }
  */
+
+ // Definition for singly-linked list.
+ function ListNode(val) {
+     this.val = val;
+     this.next = null;
+ }
+
 /**
  * @param {ListNode[]} lists
  * @return {ListNode}
@@ -41,3 +42,5 @@ var mergeKLists = function(lists) {
 	return mergedHead;
 
 };
+
+module.exports = { ListNode, mergeKLists };

@@ -50,3 +50,5 @@ var longestConsecutive = function(nums) {
 	});
 	return L;
 }
+
+module.exports = longestConsecutive;
